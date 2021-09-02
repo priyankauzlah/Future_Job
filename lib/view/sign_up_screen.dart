@@ -1,3 +1,5 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:job_app/theme.dart';
 
@@ -9,6 +11,11 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  TextEditingController nameController = TextEditingController(text: '');
+  TextEditingController emailController = TextEditingController(text: '');
+  TextEditingController passwordController = TextEditingController(text: '');
+  TextEditingController goalController = TextEditingController(text: '');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,10 +55,157 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 8.0,
                 ),
                 TextFormField(
+                  cursorColor: primaryColor,
+                  controller: nameController,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 20.0)
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 20.0),
+                      fillColor: formColor,
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide.none),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: BorderSide(color: primaryColor),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      hintText: ''),
+                  style: purpleTextStyle,
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  'Email',
+                  style: greyTextStyle.copyWith(fontSize: 16.0),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                TextFormField(
+                  cursorColor: primaryColor,
+                  controller: emailController,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 20.0),
+                      fillColor: formColor,
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide.none),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: BorderSide(
+                            color: EmailValidator.validate(emailController.text)
+                                ? primaryColor
+                                : Colors.red),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: BorderSide(
+                            color: EmailValidator.validate(emailController.text)
+                                ? primaryColor
+                                : Colors.red),
+                      ),
+                      hintText: ''),
+                  style: EmailValidator.validate(emailController.text)
+                      ? purpleTextStyle
+                      : redTextStyle,
+                ),
+                Text(
+                  'Password',
+                  style: greyTextStyle.copyWith(fontSize: 16.0),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                TextFormField(
+                  obscureText: true,
+                  cursorColor: primaryColor,
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 20.0),
+                      fillColor: formColor,
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide.none),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: BorderSide(color: primaryColor),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      hintText: ''),
+                  style: purpleTextStyle,
+                ),
+                Text(
+                  'Goal',
+                  style: greyTextStyle.copyWith(fontSize: 16.0),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                TextFormField(
+                  cursorColor: primaryColor,
+                  controller: goalController,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 20.0),
+                      fillColor: formColor,
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide.none),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: BorderSide(color: primaryColor),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      hintText: ''),
+                  style: purpleTextStyle,
+                ),
+                SizedBox(
+                  height: 40.0,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 45.0,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(65.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Sign Up',
+                      style:
+                      whiteTextStyle.copyWith(fontWeight: FontWeight.w600),
+                    ),
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: TextButton(
+                      onPressed: () {},
+                      child: Text('Back to Sign In',
+                        style: greyTextStyle.copyWith(
+                            fontWeight: FontWeight.w400)),
+                  ),
+                ),
               ],
             ),
           ),

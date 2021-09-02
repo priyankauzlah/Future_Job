@@ -69,7 +69,9 @@ class OnBoardingScreen extends StatelessWidget {
                             side: BorderSide(color: Colors.white),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/signin');
+                        },
                         child: Text(
                           'Sign In',
                           style: whiteTextStyle.copyWith(
