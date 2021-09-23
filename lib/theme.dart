@@ -6,6 +6,7 @@ Color transparentColor = Colors.transparent;
 Color greyColor = Color(0xffb3b5c4);
 Color blackColor = Colors.black;
 Color formColor = Color(0xfff1f0f5);
+Color redColor = Color(0xffFD4f56);
 
 TextStyle whiteTextStyle = GoogleFonts.poppins(color: Colors.white);
 TextStyle purpleTextStyle = GoogleFonts.poppins(color: primaryColor);
