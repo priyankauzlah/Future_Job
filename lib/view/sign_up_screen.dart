@@ -47,10 +47,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           border: Border.all(color: primaryColor)),
                       child: Image.asset('assets/images/image_profile.png')),
                 ),
-                Text(
-                  'Full Name',
-                  style: greyTextStyle.copyWith(fontSize: 16.0),
-                ),
                 SizedBox(
                   height: 8.0,
                 ),
