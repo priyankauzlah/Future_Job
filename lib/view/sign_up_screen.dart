@@ -1,7 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:job_app/model/user_model.dart';
+import 'package:job_app/providers/auth/auth_provider.dart';
+import 'package:job_app/providers/user/user_provider.dart';
 import 'package:job_app/theme.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -16,8 +20,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController passwordController = TextEditingController(text: '');
   TextEditingController goalController = TextEditingController(text: '');
 
+  bool isLoading = false;
+
+
   @override
   Widget build(BuildContext context) {
+    void showError(String message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(backgroundColor: Colors.red, content: Text(message)));
+    }
+
+    var authProvider = Provider.of<AuthProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -82,6 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 8.0,
                 ),
                 TextFormField(
+                  // <<<<DIMASUKKIN DISINI BESTIE, EMAIL VALIDATOR>>>>
                   cursorColor: primaryColor,
                   controller: emailController,
                   decoration: InputDecoration(
@@ -174,9 +190,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Container(
                   width: double.infinity,
                   height: 45.0,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  child: isLoading ? Center(child: CircularProgressIndicator()) : TextButton(
+                    onPressed: () async {
+                      if (nameController.text.isEmpty ||
+                          passwordController.text.isEmpty ||
+                          goalController.text.isEmpty) {
+                        showError("Data cannot empty");
+                      } else {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        UserModel user = await authProvider.register(
+                            emailController.text,
+                            passwordController.text,
+                            nameController.text,
+                            goalController.text);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (user == null) {
+                          showError('Failed Data');
+                        } else {
+                          userProvider.user = user;
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/home', (route) => false);
+                        }
+                      }
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: primaryColor,
@@ -196,8 +235,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 Center(
                   child: TextButton(
-                      onPressed: () {},
-                      child: Text('Back to Sign In',
+                    onPressed: () {},
+                    child: Text('Back to Sign In',
                         style: greyTextStyle.copyWith(
                             fontWeight: FontWeight.w400)),
                   ),

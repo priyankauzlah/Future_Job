@@ -1,7 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:job_app/model/user_model.dart';
+import 'package:job_app/providers/auth/auth_provider.dart';
+import 'package:job_app/providers/user/user_provider.dart';
 import 'package:job_app/theme.dart';
+import 'package:provider/provider.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -14,8 +18,18 @@ class _SigninScreenState extends State<SigninScreen> {
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
+    void showError(String message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(backgroundColor: Colors.red, content: Text(message)));
+    }
+
+    var authProvider = Provider.of<AuthProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -55,8 +69,8 @@ class _SigninScreenState extends State<SigninScreen> {
                   cursorColor: primaryColor,
                   controller: emailController,
                   decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 26.0, vertical: 20.0),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 20.0),
                       fillColor: formColor,
                       filled: true,
                       enabledBorder: OutlineInputBorder(
@@ -93,8 +107,8 @@ class _SigninScreenState extends State<SigninScreen> {
                   cursorColor: primaryColor,
                   controller: passwordController,
                   decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 26.0, vertical: 20.0),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 26.0, vertical: 20.0),
                       fillColor: formColor,
                       filled: true,
                       enabledBorder: OutlineInputBorder(
@@ -117,8 +131,27 @@ class _SigninScreenState extends State<SigninScreen> {
                   width: double.infinity,
                   height: 45.0,
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                    onPressed: () async {
+                      if (emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
+                        showError("Data cannot empty");
+                      } else {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        UserModel user = await authProvider.signin(
+                            emailController.text, passwordController.text);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (user == null) {
+                          showError('Failed Data');
+                        } else {
+                          userProvider.user = user;
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/home', (route) => false);
+                        }
+                      }
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: primaryColor,
@@ -129,7 +162,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     child: Text(
                       'Sign In',
                       style:
-                      whiteTextStyle.copyWith(fontWeight: FontWeight.w600),
+                          whiteTextStyle.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
